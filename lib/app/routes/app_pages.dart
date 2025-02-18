@@ -27,7 +27,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.EDIT,
-      page: () => const EditView(),
+      page: () =>  EditView(),
       binding: EditBinding(),
     ),
   ];

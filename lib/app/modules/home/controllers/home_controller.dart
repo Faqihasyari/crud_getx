@@ -1,23 +1,56 @@
+import 'package:crud_getx/app/data/providers/user_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../data/models/user_model.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
+  var product = List<User>.empty().obs;
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
+  void dialogError(String msg) {
+    Get.defaultDialog(
+      title: "Terjadi Keasalahan",
+      content: Text(
+        msg,
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  void add(String name) {
+    if (name != '') {
+      final date = DateTime.now().toIso8601String();
+      UserProvider().postUser(name, date).then((response) {
+        final data = User(id: response["name"], name: name, createAt: date);
+        product.add(data);
+        Get.back();
+      });
+    } else {
+      dialogError("Semua Input Harus Diisi");
+    }
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  void delete(String id) {
+    UserProvider()
+        .deleteUser(id)
+        .then((_) => product.removeWhere((element) => element.id == id));
   }
 
-  void increment() => count.value++;
+  User findById(String id) {
+    return product.firstWhere(
+      (element) => element.id == id,
+    );
+  }
+
+  void edit(String id, String name) {
+    final index = product.indexWhere((user) => user.id == id);
+    if (index == -1) return;
+
+    UserProvider().editUser(id, name).then((_) {
+      product[index].name = name;
+      product.refresh();
+      Get.back();
+    }).catchError((error) {
+      print("Error: $error");
+    });
+  }
 }

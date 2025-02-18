@@ -1,3 +1,4 @@
+import 'package:crud_getx/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -10,15 +11,38 @@ class AddView extends GetView<AddController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AddView'),
+        title: const Text('ADD PRODUCT'),
         centerTitle: true,
       ),
-      body: const Center(
-        child: Text(
-          'AddView is working',
-          style: TextStyle(fontSize: 20),
+      body: Center(
+          child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            TextField(
+              autocorrect: false,
+              controller: controller.name,
+              decoration: InputDecoration(
+                  labelText: "Nama Produk",
+                  hintText: "Masukkan Nama Produk",
+                  border: OutlineInputBorder()),
+              onEditingComplete: () =>
+                  Get.find<HomeController>().add(controller.name.text),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  Get.find<HomeController>().add(controller.name.text);
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                ),
+                child: Text("Tambahkan Produk"))
+          ],
         ),
-      ),
+      )),
     );
   }
 }
